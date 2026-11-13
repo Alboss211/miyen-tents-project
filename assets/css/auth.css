@@ -1,0 +1,120 @@
+/* Split-screen layout */
+.auth-wrapper {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Left Side Image */
+.auth-image {
+    flex: 1;
+    /* Relative path: goes out of CSS, into assets, into images */
+    background-image: url('../images/hero-bg.jpg'); 
+    background-color: #333; /* Fallback */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Dark overlay for text visibility */
+.auth-image::before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.auth-logo-box {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+}
+
+/* Right Side Form */
+.auth-form-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 10%;
+    background: white;
+}
+
+.auth-form-container h2 {
+    color: #F15A24;
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+}
+
+/* Inputs */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 20px;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    outline: none;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    border-color: #F15A24;
+}
+
+/* Submit Button */
+.btn-submit {
+    width: 100%;
+    background-color: #F15A24;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.3s;
+}
+
+.btn-submit:hover {
+    background-color: #d1491c;
+}
+
+/* Bottom Link */
+.auth-bottom-link {
+    margin-top: 25px;
+    text-align: center;
+    color: #555;
+}
+
+.auth-bottom-link a {
+    color: #F15A24;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Responsive: Hide image on mobile */
+@media (max-width: 768px) {
+    .auth-wrapper {
+        flex-direction: column;
+    }
+    .auth-image {
+        display: none;
+    }
+}
