@@ -18,7 +18,7 @@
     </div>
 
     <!-- Form -->
-    <form action="../src/process_booking.php" method="POST" class="booking-form">
+    <form action="../src/process_booking.php" method="POST" class="booking-form" enctype="multipart/form-data">
         
         <div class="form-row">
             <div class="form-group">
@@ -53,6 +53,12 @@
                 <label>Location</label>
                 <input type="text" name="location" placeholder="Enter Location" required>
             </div>
+        </div>
+
+        <!-- NEW: Payment Proof Upload -->
+        <div class="form-group" style="margin-top: 20px;">
+            <label>Upload Payment Proof (M-Pesa Receipt / Screenshot)</label>
+            <input type="file" name="payment_proof" accept="image/*, .pdf" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px;">
         </div>
 
         <div class="booking-actions">

@@ -26,7 +26,6 @@ $bookings = $stmt->get_result();
     <style>
         .dash-container { max-width: 1000px; margin: 40px auto; padding: 20px; }
         
-        /* Updated dashboard-header to handle buttons */
         .dashboard-header { 
             display: flex; 
             justify-content: space-between; 
@@ -56,7 +55,6 @@ $bookings = $stmt->get_result();
 
     <div class="dash-container">
         
-        <!-- UPDATED HEADER SECTION -->
         <div class="dashboard-header">
             <h2>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h2>
             <div class="header-actions">
@@ -82,13 +80,18 @@ $bookings = $stmt->get_result();
                         <td><?php echo htmlspecialchars($row['event_date']); ?></td>
                         <td><?php echo htmlspecialchars($row['tent_type']); ?></td>
                         <td><?php echo htmlspecialchars($row['location']); ?></td>
+                        
                         <td>
                             <?php if($row['status'] == 'confirmed'): ?>
                                 <span class="status-paid">PAID</span>
+                                <br>
+                                <!-- FIXED LINK PATH BELOW -->
+                                <a href="../leave-review.php?booking_id=<?php echo $row['id']; ?>" style="font-size: 0.8rem; color: #F15A24; text-decoration: underline; margin-top: 5px; display: inline-block;">Leave Review</a>
                             <?php else: ?>
                                 <span class="status-pending">PENDING PAYMENT</span>
                             <?php endif; ?>
                         </td>
+                        
                     </tr>
                     <?php endwhile; ?>
                 <?php else: ?>

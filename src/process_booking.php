@@ -16,13 +16,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $eventDate = htmlspecialchars($_POST['event_date']);
     $location = htmlspecialchars($_POST['location']);
     
-    // For now, let's use a dummy user ID if they aren't logged in.
-    // In a real app, you'd use $_SESSION['user_id']
+    // Get User ID
     $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 1; 
 
-    // Insert into database
-    $stmt = $conn->prepare("INSERT INTO bookings (user_id, location, event_date, num_attendees, tent_type) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("issis", $userId, $location, $eventDate, $attendees, $tentType);
+    // --- FILE UPLOAD LOGIC ---
+    $paymentProof = NULL;
+    if (isset($_FILES['payment_proof']) && $_FILES['payment_proof']['error'] == 0) {
+        $targetDir = "../uploads/"; 
+        
+        // Create the folder if it doesn't exist
+        if (!file_exists($targetDir)) { 
+            mkdir($targetDir, 0777, true); 
+        }
+        
+        // Create a unique filename to prevent overwriting
+        $fileName = time() . "_" . basename($_FILES["payment_proof"]["name"]);
+        $targetFilePath = $targetDir . $fileName;
+        $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
+
+        // Allow only specific file types
+        $allowTypes = array('jpg', 'png', 'jpeg', 'pdf');
+        
+        if (in_array($fileType, $allowTypes)) {
+            if (move_uploaded_file($_FILES["payment_proof"]["tmp_name"], $targetFilePath)) {
+                $paymentProof = $fileName; // Save the filename for the database
+            }
+        }
+    }
+
+    // Insert into database (Now includes payment_proof)
+    $stmt = $conn->prepare("INSERT INTO bookings (user_id, location, event_date, num_attendees, tent_type, payment_proof) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ississ", $userId, $location, $eventDate, $attendees, $tentType, $paymentProof);
 
     if ($stmt->execute()) {
         // Success! Redirect to confirmation page
