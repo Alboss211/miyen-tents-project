@@ -24,7 +24,41 @@
     <div class="auth-form-container">
         <h2>Login</h2>
         
-        <!-- Action will point to backend later -->
+        <!-- Show error message if user tried to book without logging in -->
+        <?php if(isset($_GET['error']) && $_GET['error'] == 'PleaseLoginToBook'): ?>
+            <p style="color: #dc3545; background: #f8d7da; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 20px; font-weight: 500;">
+                ⚠️ Please log in or create an account to make a booking.
+            </p>
+        <?php endif; ?>
+
+        <!-- Show error message if login failed (wrong password) -->
+        <?php if(isset($_GET['error']) && $_GET['error'] == 'IncorrectPassword'): ?>
+            <p style="color: #dc3545; background: #f8d7da; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 20px; font-weight: 500;">
+                ❌ Incorrect password. Please try again.
+            </p>
+        <?php endif; ?>
+
+        <!-- Show error message if user not found -->
+        <?php if(isset($_GET['error']) && $_GET['error'] == 'UserNotFound'): ?>
+            <p style="color: #dc3545; background: #f8d7da; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 20px; font-weight: 500;">
+                ❌ No account found with that email.
+            </p>
+        <?php endif; ?>
+
+        <!-- Show error message if account is deactivated -->
+        <?php if(isset($_GET['error']) && $_GET['error'] == 'AccountDeactivated'): ?>
+            <p style="color: #dc3545; background: #f8d7da; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 20px; font-weight: 500;">
+                🚫 Your account has been deactivated. Please contact support.
+            </p>
+        <?php endif; ?>
+
+        <!-- Show error message if vendor is pending approval -->
+        <?php if(isset($_GET['error']) && $_GET['error'] == 'PendingApproval'): ?>
+            <p style="color: #856404; background: #fff3cd; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 20px; font-weight: 500;">
+                ⏳ Your vendor account is pending admin approval. Please check back later.
+            </p>
+        <?php endif; ?>
+
         <form action="../src/process_login.php" method="POST">
             
             <div class="form-group">

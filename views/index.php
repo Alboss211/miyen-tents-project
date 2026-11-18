@@ -17,33 +17,44 @@ include '../includes/header.php';
     <h2 style="margin-bottom: 30px; font-size: 2rem;">Popular</h2>
     <div style="display: flex; gap: 20px; flex-wrap: wrap;">
         
-        <!-- Category Item -->
-        <div style="text-align: center; width: 120px;">
-            <div style="width: 100px; height: 100px; border: 1px solid #eee; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                🎓
-            </div>
-            <p style="font-weight: 600;">Graduation</p>
+        <!-- Graduation -->
+        <div style="text-align: center; width: 150px;">
+            <a href="book-now.php?type=graduation" style="text-decoration: none; color: inherit;">
+                <div style="width: 120px; height: 120px; border-radius: 15px; overflow: hidden; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    <img src="../assets/images/categories/graduation.jpg" alt="Graduation" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <p style="font-weight: 600;">Graduation</p>
+            </a>
         </div>
 
-        <div style="text-align: center; width: 120px;">
-            <div style="width: 100px; height: 100px; border: 1px solid #eee; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                ⛺
-            </div>
-            <p style="font-weight: 600;">Camping</p>
+        <!-- Camping -->
+        <div style="text-align: center; width: 150px;">
+            <a href="book-now.php?type=camping" style="text-decoration: none; color: inherit;">
+                <div style="width: 120px; height: 120px; border-radius: 15px; overflow: hidden; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    <img src="../assets/images/categories/camping.jpg" alt="Camping" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <p style="font-weight: 600;">Camping</p>
+            </a>
         </div>
 
-        <div style="text-align: center; width: 120px;">
-            <div style="width: 100px; height: 100px; border: 1px solid #eee; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                💍
-            </div>
-            <p style="font-weight: 600;">Wedding</p>
+        <!-- Wedding -->
+        <div style="text-align: center; width: 150px;">
+            <a href="book-now.php?type=wedding" style="text-decoration: none; color: inherit;">
+                <div style="width: 120px; height: 120px; border-radius: 15px; overflow: hidden; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    <img src="../assets/images/categories/wedding.jpg" alt="Wedding" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <p style="font-weight: 600;">Wedding</p>
+            </a>
         </div>
 
-        <div style="text-align: center; width: 120px;">
-            <div style="width: 100px; height: 100px; border: 1px solid #eee; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                🎂
-            </div>
-            <p style="font-weight: 600;">Birthday</p>
+        <!-- Birthday -->
+        <div style="text-align: center; width: 150px;">
+            <a href="book-now.php?type=birthday" style="text-decoration: none; color: inherit;">
+                <div style="width: 120px; height: 120px; border-radius: 15px; overflow: hidden; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    <img src="../assets/images/categories/birthday.jpg" alt="Birthday" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <p style="font-weight: 600;">Birthday</p>
+            </a>
         </div>
 
     </div>

@@ -1,4 +1,12 @@
-<?php include '../includes/header.php'; ?>
+<?php 
+include '../includes/header.php'; 
+
+// SECURITY: Require login before booking
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php?error=PleaseLoginToBook");
+    exit();
+}
+?>
 
 <link rel="stylesheet" href="../assets/css/booking.css">
 
@@ -55,7 +63,7 @@
             </div>
         </div>
 
-        <!-- NEW: Payment Proof Upload -->
+        <!-- Payment Proof Upload -->
         <div class="form-group" style="margin-top: 20px;">
             <label>Upload Payment Proof (M-Pesa Receipt / Screenshot)</label>
             <input type="file" name="payment_proof" accept="image/*, .pdf" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px;">

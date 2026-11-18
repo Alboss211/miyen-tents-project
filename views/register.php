@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account - Miyen Tents</title>
     
-    <!-- Using standard relative paths -->
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/auth.css">
 </head>
@@ -16,7 +15,6 @@
     <!-- Left Side Image -->
     <div class="auth-image">
         <div class="auth-logo-box">
-            <!-- We will put your logo here later -->
             <h1 style="font-size: 3rem; margin: 0; letter-spacing: 2px;">MIYEN</h1>
             <h2 style="font-weight: 300; letter-spacing: 5px; margin: 0;">TENTS</h2>
         </div>
@@ -52,13 +50,16 @@
                 <label>Confirm Password</label>
                 <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
             </div>
+
+            <!-- NEW: Account Type Selection -->
             <div class="form-group">
-    <label>Account Type</label>
-    <select name="role" style="width: 100%; padding: 14px 20px; border: 1px solid #ccc; border-radius: 30px; outline: none;">
-        <option value="user">I am a Customer (Looking to book)</option>
-        <option value="vendor">I am a Vendor (Looking to sell)</option>
-    </select>
-</div>
+                <label>Account Type</label>
+                <select name="role" required style="width: 100%; padding: 14px 20px; border: 1px solid #ccc; border-radius: 30px; outline: none; font-family: inherit; font-size: 1rem; background: white;">
+                    <option value="user">I am a Customer (Looking to book)</option>
+                    <option value="vendor">I am a Vendor (Looking to sell)</option>
+                </select>
+            </div>
+
             <button type="submit" class="btn-submit">Create Account</button>
             
             <div class="auth-bottom-link">
@@ -68,5 +69,7 @@
     </div>
 </div>
 
+<!-- Include JS Validation -->
+<script src="../assets/js/validation.js"></script>
 </body>
 </html>

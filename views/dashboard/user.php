@@ -39,11 +39,15 @@ $bookings = $stmt->get_result();
         }
         
         table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 40px; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; vertical-align: top; }
         th { background: #f9f9f9; font-weight: bold; }
         
         .status-paid { color: white; background: #28a745; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
         .status-pending { color: white; background: #dc3545; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+        .status-rejected { color: white; background: #6c757d; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+        
+        .delivery-info { font-size: 0.8rem; color: #007bff; font-weight: bold; margin-top: 5px; display: block; }
+        .rejection-info { font-size: 0.75rem; color: #dc3545; display: block; margin-top: 5px; }
         
         .reset-box { background: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #ddd; }
         .reset-box input { padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-right: 10px; }
@@ -84,14 +88,24 @@ $bookings = $stmt->get_result();
                         <td>
                             <?php if($row['status'] == 'confirmed'): ?>
                                 <span class="status-paid">PAID</span>
-                                <br>
-                                <!-- FIXED LINK PATH BELOW -->
+                                <!-- Show Delivery Status -->
+                                <span class="delivery-info">
+                                    🚚 Delivery: <?php echo ucfirst(htmlspecialchars($row['delivery_status'] ?? 'pending')); ?>
+                                </span>
                                 <a href="../leave-review.php?booking_id=<?php echo $row['id']; ?>" style="font-size: 0.8rem; color: #F15A24; text-decoration: underline; margin-top: 5px; display: inline-block;">Leave Review</a>
+                            
+                            <?php elseif(!empty($row['rejection_reason'])): ?>
+                                <span class="status-rejected">REJECTED</span>
+                                <!-- Show Rejection Reason -->
+                                <span class="rejection-info">
+                                    ❌ Reason: <?php echo htmlspecialchars($row['rejection_reason']); ?>
+                                </span>
+                                <a href="../book-now.php" style="font-size: 0.8rem; color: #F15A24; text-decoration: underline; margin-top: 5px; display: inline-block;">Upload New Proof</a>
+                            
                             <?php else: ?>
                                 <span class="status-pending">PENDING PAYMENT</span>
                             <?php endif; ?>
                         </td>
-                        
                     </tr>
                     <?php endwhile; ?>
                 <?php else: ?>

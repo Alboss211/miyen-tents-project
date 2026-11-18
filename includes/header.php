@@ -21,7 +21,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 <div class="nav-links">
             <a href="../views/index.php">Home</a>
             <a href="../views/book-now.php" style="color: #F15A24; font-weight: bold;">Book Now</a>
-            <a href="#">Gallery</a>
+            <a href="../views/gallery.php">Gallery</a>
             <a href="#">Contacts</a>
             
             <?php if(isset($_SESSION['user_id'])): ?>
