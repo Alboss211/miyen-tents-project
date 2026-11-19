@@ -33,11 +33,6 @@ $bookings = $stmt->get_result();
             margin-bottom: 30px; 
         }
         
-        .header-actions a {
-            text-decoration: none;
-            margin-left: 10px;
-        }
-        
         table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 40px; }
         th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; vertical-align: top; }
         th { background: #f9f9f9; font-weight: bold; }
@@ -61,8 +56,8 @@ $bookings = $stmt->get_result();
         
         <div class="dashboard-header">
             <h2>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h2>
-            <div class="header-actions">
-                <a href="../../views/index.php" class="btn btn-outline">Go to Homepage</a>
+            <div>
+                <!-- Only the primary action button remains -->
                 <a href="../../views/book-now.php" class="btn btn-orange">Book a New Tent</a>
             </div>
         </div>
@@ -88,7 +83,6 @@ $bookings = $stmt->get_result();
                         <td>
                             <?php if($row['status'] == 'confirmed'): ?>
                                 <span class="status-paid">PAID</span>
-                                <!-- Show Delivery Status -->
                                 <span class="delivery-info">
                                     🚚 Delivery: <?php echo ucfirst(htmlspecialchars($row['delivery_status'] ?? 'pending')); ?>
                                 </span>
@@ -96,7 +90,6 @@ $bookings = $stmt->get_result();
                             
                             <?php elseif(!empty($row['rejection_reason'])): ?>
                                 <span class="status-rejected">REJECTED</span>
-                                <!-- Show Rejection Reason -->
                                 <span class="rejection-info">
                                     ❌ Reason: <?php echo htmlspecialchars($row['rejection_reason']); ?>
                                 </span>
@@ -122,5 +115,19 @@ $bookings = $stmt->get_result();
             </form>
         </div>
     </div>
+
+    <!-- Script to automatically fix the header's logout button link -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                // If it finds the broken header link, fix it instantly
+                if (link.href.includes('/views/src/process_logout.php') || link.innerText.trim() === 'Logout') {
+                    link.href = '../../src/process_logout.php';
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>

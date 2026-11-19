@@ -1,3 +1,7 @@
+<?php
+// Start the session so error messages work properly
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,6 +26,14 @@
 
     <!-- Right Side Form -->
     <div class="auth-form-container">
+        
+        <!-- Back to Homepage Button (FIXED the double views bug) -->
+        <div style="margin-bottom: 20px;">
+            <a href="index.php" style="text-decoration: none; color: #666; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 5px;">
+                ← Back to Homepage
+            </a>
+        </div>
+
         <h2>Login</h2>
         
         <!-- Show error message if user tried to book without logging in -->
@@ -59,7 +71,8 @@
             </p>
         <?php endif; ?>
 
-        <form action="../src/process_login.php" method="POST">
+        <!-- Note: Action points to ../src/ which is correct since login.php is in the views folder -->
+       <form action="/miyen-tents-project/src/process_login.php" method="POST">
             
             <div class="form-group">
                 <label>Email</label>

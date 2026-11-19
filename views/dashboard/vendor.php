@@ -15,7 +15,6 @@ $message = "";
 if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['upload_product'])) {
     $name = htmlspecialchars($_POST['name']);
     $price = htmlspecialchars($_POST['price']);
-    $desc = htmlspecialchars($_POST['description']);
     $availability = $_POST['availability'];
     
     // Handle Image Upload
@@ -36,18 +35,35 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['upload_product'])) {
         }
     }
 
-    $stmt = $conn->prepare("INSERT INTO products (vendor_id, name, price, description, availability, image_path) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("idssss", $userId, $name, $price, $desc, $availability, $imagePath);
+    // We insert into event_items so that the booking system recognizes it
+    $stmt = $conn->prepare("INSERT INTO event_items (vendor_id, name, price, availability, image_path) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("isdss", $userId, $name, $price, $availability, $imagePath);
     
-    if($stmt->execute()) { $message = "Tent uploaded successfully!"; } 
-    else { $message = "Error uploading tent."; }
+    if($stmt->execute()) { $message = "Item uploaded successfully!"; } 
+    else { $message = "Error uploading item."; }
 }
 
-// Fetch Vendor's Products
-$stmt = $conn->prepare("SELECT * FROM products WHERE vendor_id = ?");
+// Fetch Vendor's Uploaded Items
+$stmt = $conn->prepare("SELECT * FROM event_items WHERE vendor_id = ? ORDER BY name");
 $stmt->bind_param("i", $userId);
 $stmt->execute();
-$products = $stmt->get_result();
+$myItems = $stmt->get_result();
+
+// Fetch Bookings for Vendor's Items
+$bookingQuery = "
+    SELECT b.id as booking_id, b.event_date, b.location, b.status, b.total_amount, 
+           u.first_name, u.surname,
+           ei.name as item_name, ei.price
+    FROM bookings b
+    JOIN users u ON b.user_id = u.id
+    JOIN event_items ei ON b.tent_type = ei.name
+    WHERE ei.vendor_id = ?
+    ORDER BY b.created_at DESC
+";
+$stmt = $conn->prepare($bookingQuery);
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$bookings = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -58,40 +74,43 @@ $products = $stmt->get_result();
     <link rel="stylesheet" href="../../assets/css/style.css">
     <style>
         .dash-container { max-width: 1000px; margin: 40px auto; padding: 20px; }
+        
         .upload-box { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 30px; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
         .btn-upload { background: #F15A24; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .product-card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .product-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
-        .status-avail { color: green; font-weight: bold; font-size: 0.8rem; }
-        .status-unavail { color: red; font-weight: bold; font-size: 0.8rem; }
+        
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 40px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f9f9f9; font-weight: bold; }
+        .status-paid { color: white; background: #28a745; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; }
+        .status-pending { color: white; background: #dc3545; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; }
     </style>
 </head>
 <body>
     <?php include '../../includes/header.php'; ?>
 
     <div class="dash-container">
+        
+        <!-- Just the Title (No duplicate button) -->
         <h2>Vendor Dashboard</h2>
+        <br>
+
         <?php if($message): ?><p style="color: green; font-weight: bold;"><?php echo $message; ?></p><?php endif; ?>
 
+        <!-- Upload Form -->
         <div class="upload-box">
-            <h3>Upload New Tent Offering</h3>
+            <h3>Upload New Item</h3>
             <form method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="upload_product" value="1">
                 <div class="form-group">
-                    <label>Product Name</label>
-                    <input type="text" name="name" placeholder="e.g. Premium Wedding Tent" required>
+                    <label>Item Name</label>
+                    <input type="text" name="name" placeholder="e.g. Plastic Chairs, Folding Tables, VIP Tent" required>
                 </div>
                 <div class="form-group">
                     <label>Price (KES)</label>
-                    <input type="number" name="price" placeholder="e.g. 20000" required>
-                </div>
-                <div class="form-group">
-                    <label>Description (Camping Package details)</label>
-                    <textarea name="description" rows="3" placeholder="Describe the tent, capacity, and features..." required></textarea>
+                    <input type="number" name="price" placeholder="e.g. 150" required>
                 </div>
                 <div class="form-group">
                     <label>Availability</label>
@@ -101,36 +120,78 @@ $products = $stmt->get_result();
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Tent Photo</label>
-                    <input type="file" name="tent_image" accept="image/*" required>
+                    <label>Item Photo (Optional)</label>
+                    <input type="file" name="tent_image" accept="image/*">
                 </div>
-                <button type="submit" class="btn-upload">Upload Product</button>
+                <button type="submit" class="btn-upload">Upload Item</button>
             </form>
         </div>
 
         <hr style="margin: 40px 0; border: 0; border-top: 1px solid #ddd;">
-        <h3>Your Active Listings</h3>
-        <div class="product-grid">
-            <?php if($products->num_rows > 0): ?>
-                <?php while($row = $products->fetch_assoc()): ?>
-                    <div class="product-card">
-                        <?php if($row['image_path']): ?>
-                            <img src="../../uploads/<?php echo htmlspecialchars($row['image_path']); ?>" alt="Tent Image">
-                        <?php else: ?>
-                            <div style="width:100%; height:150px; background:#eee; border-radius:8px; display:flex; align-items:center; justify-content:center;">No Image</div>
-                        <?php endif; ?>
-                        <h4><?php echo htmlspecialchars($row['name']); ?></h4>
-                        <p style="color: #F15A24; font-weight: bold;">KES <?php echo htmlspecialchars($row['price']); ?></p>
-                        <p style="font-size: 0.85rem; color: #666;"><?php echo htmlspecialchars($row['description']); ?></p>
-                        <p class="<?php echo $row['availability'] == 'available' ? 'status-avail' : 'status-unavail'; ?>">
-                            Status: <?php echo ucfirst($row['availability']); ?>
-                        </p>
-                    </div>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <p>You haven't uploaded any tents yet.</p>
-            <?php endif; ?>
-        </div>
+
+        <!-- My Uploaded Items -->
+        <h3>Your Uploaded Items</h3>
+        <table>
+            <thead>
+                <tr><th>Item Name</th><th>Price (KES)</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                <?php if($myItems->num_rows > 0): ?>
+                    <?php while($row = $myItems->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($row['name']); ?></td>
+                        <td><?php echo number_format($row['price'], 2); ?></td>
+                        <td><span style="color: <?php echo $row['availability'] == 'available' ? 'green' : 'red'; ?>; font-weight: bold;"><?php echo ucfirst($row['availability']); ?></span></td>
+                    </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr><td colspan="3">You haven't uploaded any items yet.</td></tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <!-- Bookings for My Items -->
+        <h3>Bookings for Your Items</h3>
+        <table>
+            <thead>
+                <tr><th>Customer</th><th>Item Booked</th><th>Event Date</th><th>Location</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                <?php if($bookings->num_rows > 0): ?>
+                    <?php while($b = $bookings->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($b['first_name'] . ' ' . $b['surname']); ?></td>
+                        <td><?php echo htmlspecialchars($b['item_name']); ?></td>
+                        <td><?php echo htmlspecialchars($b['event_date']); ?></td>
+                        <td><?php echo htmlspecialchars($b['location']); ?></td>
+                        <td>
+                            <?php if($b['status'] == 'confirmed'): ?>
+                                <span class="status-paid">PAID</span>
+                            <?php else: ?>
+                                <span class="status-pending">PENDING</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr><td colspan="5">No bookings for your items yet.</td></tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
+
+    <!-- Script to automatically fix the header's logout button link -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                // If it finds the broken header link, fix it instantly
+                if (link.href.includes('/views/src/process_logout.php') || link.innerText.trim() === 'Logout') {
+                    link.href = '../../src/process_logout.php';
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>

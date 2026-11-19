@@ -15,13 +15,13 @@ include '../includes/header.php';
 <!-- Popular Categories -->
 <section style="padding: 60px 10%; background: white;">
     <h2 style="margin-bottom: 30px; font-size: 2rem;">Popular</h2>
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+    <div style="display: flex; gap: 30px; flex-wrap: wrap;">
         
         <!-- Graduation -->
         <div style="text-align: center; width: 150px;">
-            <a href="book-now.php?type=graduation" style="text-decoration: none; color: inherit;">
-                <div style="width: 120px; height: 120px; border-radius: 15px; overflow: hidden; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                    <img src="../assets/images/categories/graduation.jpg" alt="Graduation" style="width: 100%; height: 100%; object-fit: cover;">
+            <a href="gallery.php?category=graduation" style="text-decoration: none; color: inherit;">
+                <div style="width: 120px; height: 120px; border-radius: 20px; background: #f9f9f9; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; font-size: 50px; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.3s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#F15A24';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='#eee';">
+                    🎓
                 </div>
                 <p style="font-weight: 600;">Graduation</p>
             </a>
@@ -29,9 +29,9 @@ include '../includes/header.php';
 
         <!-- Camping -->
         <div style="text-align: center; width: 150px;">
-            <a href="book-now.php?type=camping" style="text-decoration: none; color: inherit;">
-                <div style="width: 120px; height: 120px; border-radius: 15px; overflow: hidden; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                    <img src="../assets/images/categories/camping.jpg" alt="Camping" style="width: 100%; height: 100%; object-fit: cover;">
+            <a href="gallery.php?category=camping" style="text-decoration: none; color: inherit;">
+                <div style="width: 120px; height: 120px; border-radius: 20px; background: #f9f9f9; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; font-size: 50px; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.3s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#F15A24';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='#eee';">
+                    ⛺
                 </div>
                 <p style="font-weight: 600;">Camping</p>
             </a>
@@ -39,9 +39,9 @@ include '../includes/header.php';
 
         <!-- Wedding -->
         <div style="text-align: center; width: 150px;">
-            <a href="book-now.php?type=wedding" style="text-decoration: none; color: inherit;">
-                <div style="width: 120px; height: 120px; border-radius: 15px; overflow: hidden; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                    <img src="../assets/images/categories/wedding.jpg" alt="Wedding" style="width: 100%; height: 100%; object-fit: cover;">
+            <a href="gallery.php?category=wedding" style="text-decoration: none; color: inherit;">
+                <div style="width: 120px; height: 120px; border-radius: 20px; background: #f9f9f9; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; font-size: 50px; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.3s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#F15A24';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='#eee';">
+                    💍
                 </div>
                 <p style="font-weight: 600;">Wedding</p>
             </a>
@@ -49,9 +49,9 @@ include '../includes/header.php';
 
         <!-- Birthday -->
         <div style="text-align: center; width: 150px;">
-            <a href="book-now.php?type=birthday" style="text-decoration: none; color: inherit;">
-                <div style="width: 120px; height: 120px; border-radius: 15px; overflow: hidden; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                    <img src="../assets/images/categories/birthday.jpg" alt="Birthday" style="width: 100%; height: 100%; object-fit: cover;">
+            <a href="gallery.php?category=birthday" style="text-decoration: none; color: inherit;">
+                <div style="width: 120px; height: 120px; border-radius: 20px; background: #f9f9f9; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; font-size: 50px; margin: 0 auto 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.3s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#F15A24';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='#eee';">
+                    🎂
                 </div>
                 <p style="font-weight: 600;">Birthday</p>
             </a>
@@ -65,21 +65,21 @@ include '../includes/header.php';
     <h3 style="color: #F15A24; font-size: 1.2rem; margin-bottom: 10px;">Vendor</h3>
     <h1 style="font-size: 2.5rem; margin-bottom: 20px; max-width: 700px;">Do you want to become Vendor with Miyen?</h1>
     <p style="color: #666; max-width: 600px; margin-bottom: 30px; line-height: 1.6;">
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+        Join our platform to showcase your tents and services to thousands of customers planning their next big event.
     </p>
     
     <div style="display: flex; gap: 30px; margin-bottom: 40px;">
         <div style="text-align: center;">
-            <div style="width: 80px; height: 80px; background: #ddd; border-radius: 50%; margin-bottom: 10px;"></div>
+            <div style="width: 80px; height: 80px; background: #F15A24; color: white; border-radius: 50%; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; font-size: 30px;">💰</div>
             <p style="font-weight: 600;">Earn More<br>Money</p>
         </div>
         <div style="text-align: center;">
-            <div style="width: 80px; height: 80px; background: #ddd; border-radius: 50%; margin-bottom: 10px;"></div>
-            <p style="font-weight: 600;">Earn More<br>Money</p>
+            <div style="width: 80px; height: 80px; background: #F15A24; color: white; border-radius: 50%; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; font-size: 30px;">📈</div>
+            <p style="font-weight: 600;">Grow Your<br>Business</p>
         </div>
         <div style="text-align: center;">
-            <div style="width: 80px; height: 80px; background: #ddd; border-radius: 50%; margin-bottom: 10px;"></div>
-            <p style="font-weight: 600;">Earn More<br>Money</p>
+            <div style="width: 80px; height: 80px; background: #F15A24; color: white; border-radius: 50%; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; font-size: 30px;">🤝</div>
+            <p style="font-weight: 600;">Reach More<br>Customers</p>
         </div>
     </div>
 

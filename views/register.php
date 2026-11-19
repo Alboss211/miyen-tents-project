@@ -22,6 +22,14 @@
 
     <!-- Right Side Form -->
     <div class="auth-form-container">
+        
+        <!-- Back to Homepage Button -->
+        <div style="margin-bottom: 20px;">
+            <a href="../views/index.php" style="text-decoration: none; color: #666; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 5px;">
+                ← Back to Homepage
+            </a>
+        </div>
+
         <h2>Create Account</h2>
         
         <form action="../src/process_register.php" method="POST" id="registerForm">
@@ -51,7 +59,7 @@
                 <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
             </div>
 
-            <!-- NEW: Account Type Selection -->
+            <!-- Account Type Selection -->
             <div class="form-group">
                 <label>Account Type</label>
                 <select name="role" required style="width: 100%; padding: 14px 20px; border: 1px solid #ccc; border-radius: 30px; outline: none; font-family: inherit; font-size: 1rem; background: white;">

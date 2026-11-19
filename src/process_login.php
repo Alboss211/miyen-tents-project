@@ -11,8 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Please enter both email and password.");
     }
 
-    // 1. Find the user by email (Make sure we select the role!)
-    $stmt = $conn->prepare("SELECT id, first_name, password_hash, role FROM users WHERE email = ?");
+    // 1. Find the user by email
+    $stmt = $conn->prepare("SELECT id, first_name, password_hash, role, account_status, is_approved FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -23,28 +23,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // 2. Verify the password
         if (password_verify($password, $user['password_hash'])) {
             
+            // CHECK: Block deactivated accounts
+            if ($user['account_status'] === 'deactivated') {
+                header("Location: /miyen-tents-project/views/login.php?error=AccountDeactivated");
+                exit();
+            }
+
+            // CHECK: Block unapproved vendors
+            if ($user['role'] === 'vendor' && $user['is_approved'] == 0) {
+                header("Location: /miyen-tents-project/views/login.php?error=PendingApproval");
+                exit();
+            }
+            
             // 3. Set session variables
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['first_name'];
             $_SESSION['role'] = $user['role']; 
             
-                        // 4. Redirect based on Role!
+            // 4. Redirect based on Role using ABSOLUTE paths
+            // This must match your exact folder name!
             if ($user['role'] === 'admin') {
-                header("Location: ../views/dashboard/admin.php");
+                header("Location: /miyen-tents-project/views/dashboard/admin.php");
             } elseif ($user['role'] === 'vendor') {
-                header("Location: ../views/dashboard/vendor.php");
+                header("Location: /miyen-tents-project/views/dashboard/vendor.php");
             } else {
-                // Change this line!
-                header("Location: ../views/dashboard/user.php"); 
+                header("Location: /miyen-tents-project/views/dashboard/user.php"); 
             }
             exit();
             
         } else {
-            header("Location: ../views/login.php?error=IncorrectPassword");
+            header("Location: /miyen-tents-project/views/login.php?error=IncorrectPassword");
             exit();
         }
     } else {
-        header("Location: ../views/login.php?error=UserNotFound");
+        header("Location: /miyen-tents-project/views/login.php?error=UserNotFound");
         exit();
     }
 
