@@ -85,27 +85,22 @@ $userCount = $conn->query("SELECT COUNT(*) as total FROM users WHERE role='user'
 $vendorCount = $conn->query("SELECT COUNT(*) as total FROM users WHERE role='vendor'")->fetch_assoc()['total'];
 $bookingCount = $conn->query("SELECT COUNT(*) as total FROM bookings")->fetch_assoc()['total'];
 
-// SAFE REVENUE QUERY: This will not crash even if 'attendees' column is missing
+// FIXED REVENUE QUERY: Using your local table's 'total_amount' column
 $revenue = 0;
-$checkColumn = $conn->query("SHOW COLUMNS FROM bookings LIKE 'attendees'");
+$checkColumn = $conn->query("SHOW COLUMNS FROM bookings LIKE 'total_amount'");
 if ($checkColumn && $checkColumn->num_rows > 0) {
-    // Column exists, do the math
-    $revenueQuery = $conn->query("
-        SELECT SUM(ei.price * b.attendees) as total 
-        FROM bookings b 
-        JOIN event_items ei ON b.tent_type = ei.name 
-        WHERE b.status = 'confirmed'
-    ");
+    $revenueQuery = $conn->query("SELECT SUM(total_amount) as total FROM bookings WHERE status = 'confirmed'");
+    $revenue = $revenueQuery->fetch_assoc()['total'] ?? 0;
 } else {
-    // Column does not exist, just sum the base price to keep the page working
+    // Fallback just in case
     $revenueQuery = $conn->query("
         SELECT SUM(ei.price) as total 
         FROM bookings b 
         JOIN event_items ei ON b.tent_type = ei.name 
         WHERE b.status = 'confirmed'
     ");
+    $revenue = $revenueQuery->fetch_assoc()['total'] ?? 0;
 }
-$revenue = $revenueQuery->fetch_assoc()['total'] ?? 0;
 
 // --- FETCH DATA WITH SEARCH ---
 if (isset($_GET['search']) && !empty($_GET['search'])) {
