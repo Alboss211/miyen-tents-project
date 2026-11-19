@@ -3,7 +3,7 @@ session_start();
 require_once '../../config/db_connect.php';
 
 if(!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header("Location: /miyen-tents-project/views/index.php");
+    header("Location: /views/index.php");
     exit();
 }
 
@@ -135,7 +135,7 @@ $services = $conn->query("SELECT ei.id, ei.name, ei.price, u.first_name as vendo
 <head>
     <meta charset="UTF-8">
     <title>Admin Dashboard - Miyen Tents</title>
-    <link rel="stylesheet" href="/miyen-tents-project/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
     <style>
         /* Sidebar Layout CSS */
         .dashboard-wrapper { display: flex; min-height: calc(100vh - 80px); background: #f4f6f9; }
@@ -305,7 +305,7 @@ $services = $conn->query("SELECT ei.id, ei.name, ei.price, u.first_name as vendo
                         <td><?php echo htmlspecialchars($b['event_date']); ?></td>
                         <td>
                             <?php if($b['payment_proof']): ?>
-                                <button type="button" onclick="openImageModal('/miyen-tents-project/uploads/<?php echo $b['payment_proof']; ?>')" style="background: none; border: none; color: #F15A24; font-weight: bold; text-decoration: underline; cursor: pointer; padding: 0; font-size: inherit; font-family: inherit;">View</button>
+                                <button type="button" onclick="openImageModal('/uploads/<?php echo $b['payment_proof']; ?>')" style="background: none; border: none; color: #F15A24; font-weight: bold; text-decoration: underline; cursor: pointer; padding: 0; font-size: inherit; font-family: inherit;">View</button>
                             <?php else: ?>
                                 <span style="color: #999;">None</span>
                             <?php endif; ?>

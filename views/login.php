@@ -72,7 +72,7 @@ session_start();
         <?php endif; ?>
 
         <!-- Note: Action points to ../src/ which is correct since login.php is in the views folder -->
-       <form action="/miyen-tents-project/src/process_login.php" method="POST">
+       <form action="/src/process_login.php" method="POST">
             
             <div class="form-group">
                 <label>Email</label>
