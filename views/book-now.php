@@ -3,7 +3,7 @@ include '../includes/header.php';
 
 // SECURITY: Require login before booking
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php?error=PleaseLoginToBook");
+    header("Location: /views/login.php?error=PleaseLoginToBook");
     exit();
 }
 
@@ -13,7 +13,7 @@ require_once '../config/db_connect.php';
 $itemsResult = $conn->query("SELECT * FROM event_items WHERE availability = 'available'");
 ?>
 
-<link rel="stylesheet" href="../assets/css/booking.css">
+<link rel="stylesheet" href="/assets/css/booking.css">
 
 <div class="booking-container">
     
@@ -29,8 +29,8 @@ $itemsResult = $conn->query("SELECT * FROM event_items WHERE availability = 'ava
         </div>
     </div>
 
-    <!-- The form now submits to payment.php -->
-    <form action="payment.php" method="POST" class="booking-form">
+    <!-- The form submits to payment.php -->
+    <form action="/views/payment.php" method="POST" class="booking-form">
         
         <h3 style="margin-bottom: 15px; color: #333;">Select Your Items</h3>
         <table class="item-table" style="width: 100%; border-collapse: collapse; margin-bottom: 30px; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
@@ -61,15 +61,15 @@ $itemsResult = $conn->query("SELECT * FROM event_items WHERE availability = 'ava
             </tbody>
         </table>
 
-        <div class="form-row">
-            <div class="form-group">
-                <label>Event Date</label>
-                <input type="date" name="event_date" required>
+        <div class="form-row" style="display: flex; gap: 20px; margin-bottom: 20px;">
+            <div class="form-group" style="flex: 1;">
+                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Event Date</label>
+                <input type="date" name="event_date" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px;">
             </div>
 
-            <div class="form-group">
-                <label>Location</label>
-                <input type="text" name="location" placeholder="Enter Location" required>
+            <div class="form-group" style="flex: 1;">
+                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Location</label>
+                <input type="text" name="location" placeholder="Enter Location" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px;">
             </div>
         </div>
 
@@ -78,9 +78,12 @@ $itemsResult = $conn->query("SELECT * FROM event_items WHERE availability = 'ava
             Total: KES <span id="totalAmount">0.00</span>
         </div>
 
-        <div class="booking-actions">
-            <button type="button" class="btn-back" onclick="history.back()">Back</button>
-            <button type="submit" class="btn-proceed">Proceed to Pay</button>
+        <!-- HIDDEN INPUT: This stores the total amount for payment.php -->
+        <input type="hidden" name="total_amount" id="totalHidden" value="0.00">
+
+        <div class="booking-actions" style="display: flex; gap: 15px; justify-content: flex-end;">
+            <button type="button" class="btn-back" onclick="history.back()" style="padding: 15px 40px; background: #ccc; color: #333; border: none; border-radius: 30px; cursor: pointer; font-weight: bold;">Back</button>
+            <button type="submit" class="btn-proceed" style="padding: 15px 40px; background: #F15A24; color: white; border: none; border-radius: 30px; cursor: pointer; font-weight: bold;">Proceed to Pay</button>
         </div>
     </form>
 
@@ -90,6 +93,7 @@ $itemsResult = $conn->query("SELECT * FROM event_items WHERE availability = 'ava
 document.addEventListener('DOMContentLoaded', function() {
     const quantityInputs = document.querySelectorAll('.item-quantity');
     const totalDisplay = document.getElementById('totalAmount');
+    const totalHidden = document.getElementById('totalHidden');
 
     function calculateTotal() {
         let total = 0;
@@ -100,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         totalDisplay.textContent = total.toFixed(2);
         // Store total in a hidden input to send to payment.php
-        document.getElementById('totalHidden').value = total.toFixed(2);
+        totalHidden.value = total.toFixed(2);
     }
 
     quantityInputs.forEach(input => {
