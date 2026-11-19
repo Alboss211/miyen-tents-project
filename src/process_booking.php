@@ -4,7 +4,7 @@ require_once '../config/db_connect.php';
 
 // SECURITY: Require login before processing a booking
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../views/login.php?error=PleaseLoginToBook");
+    header("Location: /views/login.php?error=PleaseLoginToBook");
     exit();
 }
 
@@ -15,12 +15,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize inputs from the payment page
     $eventDate = htmlspecialchars($_POST['event_date']);
     $location = htmlspecialchars($_POST['location']);
-    $totalAmount = htmlspecialchars($_POST['total_amount']);
+    $totalAmount = htmlspecialchars($_POST['total_amount'] ?? 0.00);
     $items = $_POST['items'] ?? [];
+    
+    // FIX: Provide a default value for the database requirement
+    $numAttendees = 100; 
 
     // Determine the primary tent name (for the admin dashboard view)
-    // Since we might have multiple items, we just take the first one for the 'tent_type' column
     $primaryTent = 'Custom Package';
+    $itemNames = [];
+    
     foreach ($items as $itemId => $quantity) {
         if ($quantity > 0) {
             $stmt = $conn->prepare("SELECT name FROM event_items WHERE id = ?");
@@ -28,10 +32,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->execute();
             $result = $stmt->get_result()->fetch_assoc();
             if ($result) {
-                $primaryTent = $result['name'];
-                break; 
+                $itemNames[] = $result['name'] . " (x" . $quantity . ")";
             }
         }
+    }
+    
+    if (!empty($itemNames)) {
+        $primaryTent = implode(", ", $itemNames); // e.g., "Chairs (x2), Tables (x1)"
     }
 
     // --- FILE UPLOAD LOGIC (Payment Proof) ---
@@ -56,13 +63,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Insert into database (now includes total_amount)
-    $stmt = $conn->prepare("INSERT INTO bookings (user_id, location, event_date, tent_type, payment_proof, total_amount) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("issssd", $userId, $location, $eventDate, $primaryTent, $paymentProof, $totalAmount);
+    // FIX: Added num_attendees to the INSERT statement to stop the 500 error
+    $stmt = $conn->prepare("INSERT INTO bookings (user_id, location, event_date, num_attendees, tent_type, payment_proof, total_amount) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ississd", $userId, $location, $eventDate, $numAttendees, $primaryTent, $paymentProof, $totalAmount);
 
     if ($stmt->execute()) {
-        // Success! Redirect to confirmation page
-        header("Location: ../views/booking-confirmed.php");
+        // Success! Redirect directly to the User Dashboard
+        header("Location: /views/dashboard/user.php?success=BookingSubmitted");
         exit();
     } else {
         echo "Error processing booking: " . $stmt->error;
